@@ -1,0 +1,16 @@
+@model ServiceRequestFormViewModel
+@{
+    ViewData["Title"] = "Create Service Request";
+}
+
+<h1 class="h3 mb-3">Create Service Request</h1>
+<form asp-action="Create" method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <partial name="_ServiceRequestFields" model="Model" />
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save and Convert</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+    </div>
+</form>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="p-4 p-md-5 bg-light border rounded-3">
+    <h1 class="display-6 fw-semibold">TechMove Global Logistics Management System</h1>
+    <p class="lead mb-4">Monolithic ASP.NET Core MVC prototype for managing clients, logistics contracts, signed agreements, and service requests.</p>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary" asp-controller="Clients" asp-action="Index">Manage Clients</a>
+        <a class="btn btn-outline-primary" asp-controller="Contracts" asp-action="Index">Manage Contracts</a>
+        <a class="btn btn-outline-primary" asp-controller="ServiceRequests" asp-action="Create">New Service Request</a>
+    </div>
+</section>
+
+<div class="row g-3 mt-4">
+    <div class="col-md-4">
+        <div class="border rounded p-3 h-100">
+            <h2 class="h5">Contract Governance</h2>
+            <p class="mb-0">Upload signed PDF agreements and filter contract records by status and date range.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="border rounded p-3 h-100">
+            <h2 class="h5">Service Request Rules</h2>
+            <p class="mb-0">Expired and on-hold contracts are blocked before service requests are saved.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="border rounded p-3 h-100">
+            <h2 class="h5">Currency Conversion</h2>
+            <p class="mb-0">USD costs are converted to ZAR through an injected HttpClient currency service.</p>
+        </div>
+    </div>
+</div>

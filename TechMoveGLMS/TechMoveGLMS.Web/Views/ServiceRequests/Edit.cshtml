@@ -1,0 +1,17 @@
+@model ServiceRequestFormViewModel
+@{
+    ViewData["Title"] = "Edit Service Request";
+}
+
+<h1 class="h3 mb-3">Edit Service Request</h1>
+<form asp-action="Edit" method="post" class="row g-3">
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <partial name="_ServiceRequestFields" model="Model" />
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Save and Recalculate</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+    </div>
+</form>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

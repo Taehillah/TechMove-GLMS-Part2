@@ -1,0 +1,17 @@
+@model Client
+
+<div class="col-md-6">
+    <label asp-for="Name" class="form-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="col-md-6">
+    <label asp-for="Region" class="form-label"></label>
+    <input asp-for="Region" class="form-control" />
+    <span asp-validation-for="Region" class="text-danger"></span>
+</div>
+<div class="col-12">
+    <label asp-for="ContactDetails" class="form-label"></label>
+    <textarea asp-for="ContactDetails" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="ContactDetails" class="text-danger"></span>
+</div>

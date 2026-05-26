@@ -1,0 +1,53 @@
+@model ContractFilterViewModel
+@{
+    ViewData["Title"] = "Contract Search";
+}
+
+<h1 class="h3 mb-3">Contract Search</h1>
+<form asp-action="Search" method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<ContractStatus>()">
+            <option value="">All statuses</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label asp-for="StartDate" class="form-label">Start date from</label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+    </div>
+    <div class="col-md-3">
+        <label asp-for="EndDate" class="form-label">End date to</label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Service Level</th>
+                <th>Status</th>
+                <th>Start</th>
+                <th>End</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Results)
+        {
+            <tr>
+                <td>@item.Client?.Name</td>
+                <td>@item.ServiceLevel</td>
+                <td>@item.Status</td>
+                <td>@item.StartDate.ToShortDateString()</td>
+                <td>@item.EndDate.ToShortDateString()</td>
+                <td class="text-end"><a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@item.Id">Details</a></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
