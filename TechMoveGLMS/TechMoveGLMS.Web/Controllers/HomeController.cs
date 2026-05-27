@@ -1,21 +1,35 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TechMoveGLMS.Web.Data;
 using TechMoveGLMS.Web.Models;
+using TechMoveGLMS.Web.Models.Enums;
+using TechMoveGLMS.Web.ViewModels;
 
 namespace TechMoveGLMS.Web.Controllers;
 
-public class HomeController : Controller
+public class HomeController(ApplicationDbContext context) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> Index()
     {
-        _logger = logger;
-    }
+        var dashboard = new DashboardViewModel
+        {
+            TotalClients = await context.Clients.CountAsync(),
+            TotalContracts = await context.Contracts.CountAsync(),
+            TotalServiceRequests = await context.ServiceRequests.CountAsync(),
+            ActiveContracts = await context.Contracts.CountAsync(contract => contract.Status == ContractStatus.Active),
+            PendingRequests = await context.ServiceRequests.CountAsync(request => request.Status == ServiceRequestStatus.Pending),
+            CompletedRequests = await context.ServiceRequests.CountAsync(request => request.Status == ServiceRequestStatus.Completed),
+            TotalFreightValueZar = await context.ServiceRequests.SumAsync(request => (decimal?)request.CostZar) ?? 0m,
+            RecentRequests = await context.ServiceRequests
+                .Include(request => request.Contract)
+                .ThenInclude(contract => contract!.Client)
+                .OrderByDescending(request => request.CreatedAt)
+                .Take(3)
+                .ToListAsync()
+        };
 
-    public IActionResult Index()
-    {
-        return View();
+        return View(dashboard);
     }
 
     public IActionResult Privacy()

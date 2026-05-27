@@ -3,7 +3,7 @@ using TechMoveGLMS.Web.Models.Enums;
 
 namespace TechMoveGLMS.Web.ViewModels;
 
-public class ContractFormViewModel
+public class ContractFormViewModel : IValidatableObject
 {
     public int Id { get; set; }
 
@@ -26,4 +26,14 @@ public class ContractFormViewModel
     public IFormFile? SignedAgreement { get; set; }
 
     public string? ExistingSignedAgreementFileName { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (EndDate < StartDate)
+        {
+            yield return new ValidationResult(
+                "End Date must be on or after Start Date.",
+                [nameof(EndDate)]);
+        }
+    }
 }

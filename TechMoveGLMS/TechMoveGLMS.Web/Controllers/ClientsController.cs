@@ -96,9 +96,18 @@ public class ClientsController(ApplicationDbContext context) : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var client = await context.Clients.FindAsync(id);
+        var client = await context.Clients
+            .Include(existingClient => existingClient.Contracts)
+            .FirstOrDefaultAsync(existingClient => existingClient.Id == id);
+
         if (client is not null)
         {
+            if (client.Contracts.Count > 0)
+            {
+                TempData["StatusMessage"] = "Client cannot be deleted while contracts are linked to it.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             context.Clients.Remove(client);
             await context.SaveChangesAsync();
         }

@@ -198,9 +198,18 @@ public class ContractsController(ApplicationDbContext context, IContractFileServ
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var contract = await context.Contracts.FindAsync(id);
+        var contract = await context.Contracts
+            .Include(existingContract => existingContract.ServiceRequests)
+            .FirstOrDefaultAsync(existingContract => existingContract.Id == id);
+
         if (contract is not null)
         {
+            if (contract.ServiceRequests.Count > 0)
+            {
+                TempData["StatusMessage"] = "Contract cannot be deleted while service requests are linked to it.";
+                return RedirectToAction(nameof(Delete), new { id });
+            }
+
             context.Contracts.Remove(contract);
             await context.SaveChangesAsync();
         }

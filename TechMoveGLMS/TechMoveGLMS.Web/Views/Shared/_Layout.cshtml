@@ -9,44 +9,71 @@
     <link rel="stylesheet" href="~/TechMoveGLMS.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">TechMove GLMS</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contracts" asp-action="Index">Contracts</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ServiceRequests" asp-action="Index">Service Requests</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contracts" asp-action="Search">Contract Search</a>
-                        </li>
-                    </ul>
+    <div class="tm-page">
+        <header class="tm-intro">
+            <span class="tm-pill">Logistics management</span>
+            <div class="tm-intro-grid">
+                <div>
+                    <div class="tm-brand-lockup" aria-label="Move-Tech logo">
+                        <span>MT</span>
+                    </div>
+                    <h1>@(ViewData["Title"] ?? "Dashboard")</h1>
                 </div>
+                <p class="tm-intro-copy">
+                    A monolithic enterprise prototype for clients, contracts, signed agreements, service requests, and USD to ZAR logistics costing.
+                </p>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        </header>
+
+        <section class="tm-app-shell">
+            <aside class="tm-side-rail" aria-label="Primary navigation">
+                <a class="tm-logo" asp-controller="Home" asp-action="Index" aria-label="Dashboard">
+                    MT
+                </a>
+                <nav class="tm-rail-nav">
+                    <a asp-controller="Home" asp-action="Index" title="Dashboard">D</a>
+                    <a asp-controller="Clients" asp-action="Index" title="Clients">C</a>
+                    <a asp-controller="Contracts" asp-action="Index" title="Contracts">K</a>
+                    <a asp-controller="ServiceRequests" asp-action="Index" title="Service Requests">S</a>
+                    <a asp-controller="Contracts" asp-action="Search" title="Contract Search">F</a>
+                </nav>
+            </aside>
+
+            <div class="tm-workspace">
+                <nav class="navbar navbar-expand-lg tm-topbar">
+                    <div class="container-fluid px-0">
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Overview</a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#tmNavigation" aria-controls="tmNavigation"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div id="tmNavigation" class="navbar-collapse collapse">
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item"><a class="nav-link" asp-controller="Clients" asp-action="Index">Clients</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Contracts" asp-action="Index">Contracts</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ServiceRequests" asp-action="Index">Requests</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Contracts" asp-action="Search">Search</a></li>
+                            </ul>
+                            <div class="tm-search">Search GLMS</div>
+                        </div>
+                    </div>
+                </nav>
+
+                <main role="main" class="tm-content">
+                    @if (TempData["StatusMessage"] is string statusMessage)
+                    {
+                        <div class="alert alert-warning mb-3">@statusMessage</div>
+                    }
+                    @RenderBody()
+                </main>
+            </div>
+        </section>
+
+        <footer class="tm-footer">
+            &copy; 2026 TechMove Global Logistics Management System
+        </footer>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - TechMove Global Logistics Management System
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

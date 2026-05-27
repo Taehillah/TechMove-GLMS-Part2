@@ -63,6 +63,14 @@ The solution remains monolithic as required for Part 2:
    dotnet run --project TechMoveGLMS.Web
    ```
 
+For a quick macOS/Linux UI preview where SQL Server LocalDB is not available, run:
+
+```bash
+UseLocalPreviewDatabase=true dotnet run --project TechMoveGLMS.Web
+```
+
+This preview switch uses an in-memory database only for local UI demonstration. The normal project configuration remains SQL Server based for the assignment and Azure SQL deployment.
+
 ## Migration Commands
 
 Create a new migration after model changes:

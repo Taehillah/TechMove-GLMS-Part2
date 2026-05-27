@@ -1,34 +1,122 @@
+@model DashboardViewModel
 @{
     ViewData["Title"] = "Dashboard";
 }
 
-<section class="p-4 p-md-5 bg-light border rounded-3">
-    <h1 class="display-6 fw-semibold">TechMove Global Logistics Management System</h1>
-    <p class="lead mb-4">Monolithic ASP.NET Core MVC prototype for managing clients, logistics contracts, signed agreements, and service requests.</p>
-    <div class="d-flex flex-wrap gap-2">
-        <a class="btn btn-primary" asp-controller="Clients" asp-action="Index">Manage Clients</a>
-        <a class="btn btn-outline-primary" asp-controller="Contracts" asp-action="Index">Manage Contracts</a>
-        <a class="btn btn-outline-primary" asp-controller="ServiceRequests" asp-action="Create">New Service Request</a>
+<section class="dashboard-grid" aria-label="Operational summary">
+    <article class="metric-card dark">
+        <p class="metric-value">@Model.ActiveContracts</p>
+        <p class="metric-label">Active contracts</p>
+    </article>
+    <article class="metric-card">
+        <p class="metric-value">@Model.PendingRequests</p>
+        <p class="metric-label">Pending requests</p>
+    </article>
+    <article class="metric-card yellow">
+        <p class="metric-value">@Model.CompletedRequests</p>
+        <p class="metric-label">Completed jobs</p>
+    </article>
+</section>
+
+<section class="brand-hero">
+    <div>
+        <span class="tm-pill hero-pill">Global freight operations</span>
+        <h2>Move-Tech logistics control for freight, contracts, and service delivery.</h2>
+        <p>Track client agreements, verify signed documents, manage service requests, and keep costing aligned to live exchange rates.</p>
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary" asp-controller="Contracts" asp-action="Create">New Contract</a>
+            <a class="btn btn-outline-light" asp-controller="ServiceRequests" asp-action="Create">New Request</a>
+        </div>
     </div>
 </section>
 
-<div class="row g-3 mt-4">
-    <div class="col-md-4">
-        <div class="border rounded p-3 h-100">
-            <h2 class="h5">Contract Governance</h2>
-            <p class="mb-0">Upload signed PDF agreements and filter contract records by status and date range.</p>
+<section class="dashboard-layout">
+    <div class="map-panel">
+        <div class="map-toolbar">Live GLMS records</div>
+        <span class="map-dot" style="left: 11%; top: 48%;" title="Clients">@Model.TotalClients</span>
+        <span class="map-dot yellow" style="left: 24%; top: 58%;" title="Contracts">@Model.TotalContracts</span>
+        <span class="map-dot" style="left: 43%; top: 44%;" title="Active contracts">@Model.ActiveContracts</span>
+        <span class="map-dot yellow" style="left: 58%; top: 52%;" title="Pending requests">@Model.PendingRequests</span>
+        <span class="map-dot" style="left: 79%; top: 62%;" title="Service requests">@Model.TotalServiceRequests</span>
+        <div class="map-legend">
+            <span><strong>@Model.TotalClients</strong> clients</span>
+            <span><strong>@Model.TotalContracts</strong> contracts</span>
+            <span><strong>@Model.TotalServiceRequests</strong> requests</span>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="border rounded p-3 h-100">
-            <h2 class="h5">Service Request Rules</h2>
-            <p class="mb-0">Expired and on-hold contracts are blocked before service requests are saved.</p>
+
+    <aside>
+        <div class="task-panel">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 class="h5 fw-bold mb-0">Tasks</h2>
+                <a class="small text-decoration-none" asp-controller="ServiceRequests" asp-action="Index">See all</a>
+            </div>
+            @foreach (var request in Model.RecentRequests)
+            {
+                <div class="task-row">
+                    <span class="task-icon">SR</span>
+                    <div>
+                        <p class="task-title">Request #@request.Id</p>
+                        <p class="task-meta">@request.Contract?.Client?.Name - @request.Status</p>
+                    </div>
+                    <small>@request.CreatedAt.ToLocalTime().ToString("dd MMM")</small>
+                </div>
+            }
+            @if (Model.RecentRequests.Count == 0)
+            {
+                <p class="task-meta mb-0">No service requests have been created yet.</p>
+            }
         </div>
-    </div>
-    <div class="col-md-4">
-        <div class="border rounded p-3 h-100">
-            <h2 class="h5">Currency Conversion</h2>
-            <p class="mb-0">USD costs are converted to ZAR through an injected HttpClient currency service.</p>
+
+        <div class="carbon-panel">
+            <p class="fw-bold mb-1">Estimated freight value</p>
+            <div class="display-6 fw-bold">R @Model.TotalFreightValueZar.ToString("N0")</div>
+            <div class="bar-strip" aria-hidden="true">
+                <span style="height: 36%;"></span>
+                <span style="height: 58%;"></span>
+                <span style="height: 76%;"></span>
+                <span style="height: 62%;"></span>
+                <span style="height: 48%;"></span>
+                <span style="height: 44%;"></span>
+                <span style="height: 70%;"></span>
+                <span style="height: 40%;"></span>
+            </div>
         </div>
-    </div>
-</div>
+    </aside>
+</section>
+
+<section class="feature-grid">
+    <article class="feature-tile image-tile client-image">
+        <div>
+            <span>Client network</span>
+            <h2>Clients</h2>
+        </div>
+    </article>
+    <article class="feature-tile image-tile contract-image">
+        <div>
+            <span>Container contracts</span>
+            <h2>Contracts</h2>
+        </div>
+    </article>
+    <article class="feature-tile image-tile request-image">
+        <div>
+            <span>Service dispatch</span>
+            <h2>Requests</h2>
+        </div>
+    </article>
+    <article class="feature-tile">
+        <h2>Clients</h2>
+        <p>Maintain enterprise client profiles, contact details, and regional coverage.</p>
+        <a class="btn btn-primary mt-3" asp-controller="Clients" asp-action="Index">Open</a>
+    </article>
+    <article class="feature-tile">
+        <h2>Contracts</h2>
+        <p>Manage service levels, contract status, and signed PDF agreements.</p>
+        <a class="btn btn-outline-primary mt-3" asp-controller="Contracts" asp-action="Index">Open</a>
+    </article>
+    <article class="feature-tile">
+        <h2>Service Requests</h2>
+        <p>Create logistics requests with validation rules and currency conversion.</p>
+        <a class="btn btn-outline-primary mt-3" asp-controller="ServiceRequests" asp-action="Create">Create</a>
+    </article>
+</section>
